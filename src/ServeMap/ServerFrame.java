@@ -22,28 +22,7 @@ import utils.utils;
 public class ServerFrame extends JFrame implements KeyListener, Runnable {
 
     Tank.Move move = Tank.Move.Stop;
-//    ServerPanel pnlServer;
-//    Image screenImage = null;
-
-//    @Override
-//    public void update(Graphics g) {
-//        screenImage = this.createImage(800, 600);
-//        Graphics gps = screenImage.getGraphics();
-//        Color c = gps.getColor();
-//        gps.setColor(Color.red);
-//        gps.fillRect(0, 0, 800, 600);
-//        gps.setColor(c);
-//        framePaint(gps);
-//        g.drawImage(screenImage, 0, 0, null);
-//        System.out.println("wrfasdasdasdasdsad");
-//    }
-//
-//    public void framePaint(Graphics g) {
-//        utils.map.drawStaticComponents(g);
-//        utils.map.drawNonStaticComponents(g);
-//        ServerMain.serverTank.drawTank(g);
-//        ServerMain.clientTank.drawTank(g);
-//    }
+//   
     public ServerFrame() {
         this.setVisible(true);
         this.setSize(new Dimension(805, 629));
@@ -55,34 +34,14 @@ public class ServerFrame extends JFrame implements KeyListener, Runnable {
 
         this.add(new ServerPanel());
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                repaint();
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }).start();
+//      
         new Thread(this).start();
 
         this.addKeyListener(this);
 
     }
 
-//    @Override
-//    public void run() {
-//        while (true) {
-//            repaint();
-//            try {
-//                Thread.sleep(50);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//    }
+//    
     @Override
     public void keyTyped(KeyEvent e) {
     }
