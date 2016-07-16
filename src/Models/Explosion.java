@@ -40,7 +40,7 @@ public class Explosion {
 			return;
 		}
 
-		g.drawImage(imgs[step], x-10, y-10,50,40, null);
+		g.drawImage(imgs[step], x-20, y-20,50,40, null);
 		step++;
 	}
 }

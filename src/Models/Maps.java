@@ -30,7 +30,8 @@ public final class Maps {
 //    ArrayList<Bullet> bullets = new ArrayList<>();
     Queue<Bullet> bullets=new ConcurrentLinkedQueue<>();
 //    List<Bullet> bullets = new Vector<>();
-    public ArrayList<Tank> tanks = new ArrayList<>();
+    public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
+    Queue<Fire> fires = new ConcurrentLinkedQueue<>();
     Queue<Explosion> explosions = new ConcurrentLinkedQueue<>();
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
@@ -69,9 +70,6 @@ public final class Maps {
     public void drawStaticComponents(Graphics g) {
 
         drawBackGround(g);
-        for (River river : rivers) {
-            river.draw(g);
-        }
 
         for (Swamp swamp : swamps) {
             swamp.draw(g);
@@ -81,6 +79,10 @@ public final class Maps {
             road.draw(g);
         }
 
+        for (River river : rivers) {
+            river.draw(g);
+        }
+        
         for (decor decor : decors) {
             decor.draw(g);
         }
@@ -198,6 +200,9 @@ public final class Maps {
         }
         for (BigExplosion ex : bigExplosions) {
             ex.draw(g);
+        }
+        for (Fire fire: fires) {
+            fire.draw(g);
         }
     }
 

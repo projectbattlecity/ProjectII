@@ -11,6 +11,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.annotation.Resource;
 
 /**
@@ -109,6 +111,7 @@ public class Tank implements Serializable {
 
     public void drawTank(Graphics g) {
         if (live) {
+//            g.drawRect(x, y, tank_width, tank_height);
             g.drawImage(temp, x, y, tank_width, tank_height, null);
         } else {
             utils.utils.map.tanks.remove(this);
@@ -133,7 +136,7 @@ public class Tank implements Serializable {
     }
 
     //bat va cham voi object
-    public boolean collideWithTanks(ArrayList<Tank> tanks) {
+    public boolean collideWithTanks(Queue<Tank> tanks) {
         for (Tank tank : tanks) {
             if (this != tank) {
                 if (this.live && tank.isLive()
@@ -266,25 +269,25 @@ public class Tank implements Serializable {
             if (move == Move.Stop || bulletAmount > maxBulletAmount) {
                 return null;
             }
-            int x=0;
-            int y=0;
+            int x = 0;
+            int y = 0;
             switch (move) {
                 case D:
                     x = this.x + tank_width / 2 - Bullet.width / 2;
-                    y = this.y + tank_height / 2 - Bullet.height / 2 + 10;
+                    y = this.y + tank_height / 2 - Bullet.height / 2 + 20;
                     break;
                 case R:
-                    x = this.x + tank_width / 2 - Bullet.width / 2+10;
+                    x = this.x + tank_width / 2 - Bullet.width / 2 + 20;
                     y = this.y + tank_height / 2 - Bullet.height / 2;
                     break;
                 case L:
-                    
-                    x = this.x + tank_width / 2 - Bullet.width / 2- 10;
+
+                    x = this.x + tank_width / 2 - Bullet.width / 2 - 20;
                     y = this.y + tank_height / 2 - Bullet.height / 2;
                     break;
                 case U:
                     x = this.x + tank_width / 2 - Bullet.width / 2;
-                    y = this.y + tank_height / 2 - Bullet.height / 2 -10 ;
+                    y = this.y + tank_height / 2 - Bullet.height / 2 - 20;
                     break;
             }
 

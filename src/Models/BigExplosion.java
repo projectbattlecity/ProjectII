@@ -42,7 +42,7 @@ public class BigExplosion {
 			return;
 		}
 
-		g.drawImage(imgs[step], x-10, y-10,40,40, null);
+		g.drawImage(imgs[step], x-20, y-20,40,40, null);
 		step++;
 	}
 }

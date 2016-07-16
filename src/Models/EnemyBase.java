@@ -21,6 +21,8 @@ public class EnemyBase {
     private int height = 80;
 
     public int x, y;
+    public int life = 5;
+    
     private boolean live = true;
 
     public boolean isLive() {

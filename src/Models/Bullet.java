@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.Random;
 import javax.annotation.Resource;
 
 /**
@@ -101,6 +101,7 @@ public class Bullet implements Serializable {
     }
 
     public void drawBullet(Graphics g) {
+//        g.drawRect(x, y, width, height);
         g.drawImage(imgTemp, x, y, width, height, null);
     }
 
@@ -147,7 +148,6 @@ public class Bullet implements Serializable {
         }
     }
 
-
     public boolean hitTank(Tank t) {
 
         if (this.getRect().intersects(t.getRect()) && t.isLive()) {
@@ -158,12 +158,12 @@ public class Bullet implements Serializable {
                 if (t.getLifeAmount() <= 0) {
                     t.setLive(false);
                     utils.utils.map.bigExplosions.add(new BigExplosion(t.getX(), t.getY()));
+                    Server.ServerMain.serverTank.bulletAmount--;
                 }
             } else {
                 t.setLive(false);
             }
-
-//            utils.utils.map.bullets.remove(this);
+            utils.utils.map.bullets.remove(this);
             return true;
         }
         return false;
@@ -241,16 +241,23 @@ public class Bullet implements Serializable {
         }
         return false;
     }
-    
+
     public boolean hitEnemyBase(EnemyBase b) {
-        if (this.getRect().intersects(b.getRect())) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            Server.ServerMain.serverTank.bulletAmount--;
-            utils.utils.map.bullets.remove(this);
-            b.setLive(false);
-            return true;
+        if (this.getRect().intersects(b.getRect()) && b.isLive()) {
+                utils.utils.map.explosions.add(new Explosion(x, y));
+                Server.ServerMain.serverTank.bulletAmount--;
+                utils.utils.map.bullets.remove(this);
+                b.life--;
+                if (b.life <= 0) {
+                    b.setLive(false);
+                    utils.utils.map.obases.remove(b);
+                } else {
+                    Random random = new Random(30);
+                    utils.utils.map.fires.add(new Fire(x + random.nextInt(30), y + random.nextInt(30)));
+                }
+                return true;
         }
         return false;
     }
-    
+
 }
