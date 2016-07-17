@@ -10,18 +10,22 @@ public class BigExplosion {
 	private boolean live = true; 
 
 	private static Image[] imgs = {
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex1.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex2.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex3.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex4.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex5.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex6.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex7.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex8.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex9.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex10.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex11.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex12.gif")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_01.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_02.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_03.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_04.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_05.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_06.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_07.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_08.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_09.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_10.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_11.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_12.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_13.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_14.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_15.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_16.png")),
         };
 	int step = 0;
 
@@ -42,7 +46,7 @@ public class BigExplosion {
 			return;
 		}
 
-		g.drawImage(imgs[step], x-20, y-20,40,40, null);
+		g.drawImage(imgs[step], x, y,80,80, null);
 		step++;
 	}
 }

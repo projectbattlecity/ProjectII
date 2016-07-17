@@ -7,7 +7,6 @@ package Models;
 
 import ServeMap.ServerPanel;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -31,7 +30,6 @@ public final class Maps {
     Queue<Bullet> bullets=new ConcurrentLinkedQueue<>();
 //    List<Bullet> bullets = new Vector<>();
     public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
-    Queue<Fire> fires = new ConcurrentLinkedQueue<>();
     Queue<Explosion> explosions = new ConcurrentLinkedQueue<>();
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
@@ -201,9 +199,7 @@ public final class Maps {
         for (BigExplosion ex : bigExplosions) {
             ex.draw(g);
         }
-        for (Fire fire: fires) {
-            fire.draw(g);
-        }
+        
     }
 
     public void drawEnemyBases() {

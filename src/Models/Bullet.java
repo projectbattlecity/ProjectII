@@ -249,11 +249,9 @@ public class Bullet implements Serializable {
                 utils.utils.map.bullets.remove(this);
                 b.life--;
                 if (b.life <= 0) {
+                    utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
                     b.setLive(false);
                     utils.utils.map.obases.remove(b);
-                } else {
-                    Random random = new Random(30);
-                    utils.utils.map.fires.add(new Fire(x + random.nextInt(30), y + random.nextInt(30)));
                 }
                 return true;
         }

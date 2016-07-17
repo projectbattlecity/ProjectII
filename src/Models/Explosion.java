@@ -10,16 +10,23 @@ public class Explosion {
 	private boolean live = true; 
 
 	private static Image[] imgs = {
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex1.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex2.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex3.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex4.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex5.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex6.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex7.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex8.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex9.gif")),
-			tk.getImage(Resource.class.getResource("/Images/Explosion/ex10.gif"))
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_01.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_02.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_03.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_04.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_05.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_06.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_07.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_08.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_09.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_10.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_11.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_12.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_13.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_14.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_15.png")),
+			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_16.png")),
+
         };
 	int step = 0;
 
@@ -40,7 +47,7 @@ public class Explosion {
 			return;
 		}
 
-		g.drawImage(imgs[step], x-20, y-20,50,40, null);
+		g.drawImage(imgs[step], x-40, y-40,100,100, null);
 		step++;
 	}
 }

@@ -21,8 +21,8 @@ public class EnemyBase {
     private int height = 80;
 
     public int x, y;
-    public int life = 5;
-    
+    public int life = 3;
+
     private boolean live = true;
 
     public boolean isLive() {
@@ -33,7 +33,12 @@ public class EnemyBase {
         this.live = live;
     }
 
-    private static Image obaseImg = tk.getImage(Resource.class.getResource("/Images/Maps/enemygen2.png"));
+    private static Image[] obaseImg
+            = {
+                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen3.png")),
+                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen2.png")),
+                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen1.png"))
+            };
 
     public EnemyBase(int x, int y) {
         this.x = x;
@@ -45,7 +50,7 @@ public class EnemyBase {
 
     public void draw(Graphics g) {
         if (live) {
-            g.drawImage(obaseImg, x, y, width, height, null);
+            g.drawImage(obaseImg[life-1], x, y, width, height, null);
         }
     }
 

@@ -10,9 +10,7 @@ import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.annotation.Resource;
 
 /**
@@ -32,7 +30,7 @@ public class Tank implements Serializable {
 
     //control amount of bullet
     public int bulletAmount = 0;
-    private int maxBulletAmount = 3;
+    public int maxBulletAmount = 3;
 
     Move move;
 
