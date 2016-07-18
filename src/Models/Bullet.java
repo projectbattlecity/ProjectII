@@ -117,7 +117,6 @@ public class Bullet implements Serializable {
         if (x < 0 || y < 0 || x > 760 || y > 560) {
             utils.utils.map.explosions.add(new Explosion(x, y));
             utils.utils.map.bullets.remove(this);
-            Server.ServerMain.serverTank.bulletAmount--;
         }
     }
 
@@ -137,7 +136,6 @@ public class Bullet implements Serializable {
                     }
                 }
             }
-            Server.ServerMain.serverTank.bulletAmount--;
             utils.utils.map.bullets.remove(this);
             return true;
         }
@@ -148,7 +146,6 @@ public class Bullet implements Serializable {
         if (this.getRect().intersects(w.getRect())) {
             utils.utils.map.explosions.add(new Explosion(x, y));
             utils.utils.map.bullets.remove(this);
-            Server.ServerMain.serverTank.bulletAmount--;
             utils.utils.map.homeWalls.remove(w);
             return true;
         }
@@ -160,12 +157,10 @@ public class Bullet implements Serializable {
             if (tank_level > 0) {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
                 utils.utils.map.rockWalls.remove(w);
             } else {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
             }
             return true;
         }
@@ -177,12 +172,10 @@ public class Bullet implements Serializable {
             if (tank_level > 1) {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
                 utils.utils.map.stoneWalls.remove(w);
             } else {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
             }
             return true;
         }
@@ -194,12 +187,10 @@ public class Bullet implements Serializable {
             if (tank_level > 1) {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
                 utils.utils.map.decors.remove(d);
             } else {
                 utils.utils.map.explosions.add(new Explosion(x, y));
                 utils.utils.map.bullets.remove(this);
-                Server.ServerMain.serverTank.bulletAmount--;
             }
             return true;
         }
@@ -210,7 +201,6 @@ public class Bullet implements Serializable {
         if (this.getRect().intersects(utils.utils.map.home.getRect())) {
             utils.utils.map.explosions.add(new Explosion(x, y));
             utils.utils.map.bullets.remove(this);
-            Server.ServerMain.serverTank.bulletAmount--;
             utils.utils.map.home.setLive(false);
             return true;
         }
@@ -220,7 +210,6 @@ public class Bullet implements Serializable {
     public boolean hitEnemyBase(EnemyBase b) {
         if (this.getRect().intersects(b.getRect()) && b.isLive()) {
             utils.utils.map.explosions.add(new Explosion(x, y));
-            Server.ServerMain.serverTank.bulletAmount--;
             utils.utils.map.bullets.remove(this);
             b.life--;
             if (b.life <= 0) {

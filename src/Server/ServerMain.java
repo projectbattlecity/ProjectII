@@ -7,6 +7,12 @@ package Server;
 
 import Models.Player;
 import ServeMap.ServerFrame;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,16 +21,16 @@ import ServeMap.ServerFrame;
 public class ServerMain {
 
   
+    
     public static Player serverTank = new Player(0, 0);
-    public static Player clientTank = new Player(0, 100);
 
     public static void main(String[] args) {
         new ServerFrame();
         
         utils.utils.map.tanks.add(serverTank);
-        utils.utils.map.tanks.add(clientTank);
         
-//       
+        
+        
     }
 
 }

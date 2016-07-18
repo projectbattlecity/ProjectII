@@ -7,15 +7,21 @@ package Models;
 
 import ServeMap.ServerPanel;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.swing.Timer;
 
 /**
  *
  * @author c1409l0937
  */
-public final class Maps {
+public final class Maps implements ActionListener {
 
+    Timer timer;
+    int genRate = 0;
     Home home;
 
     Queue<RockWall> rockWalls = new ConcurrentLinkedQueue<>(); // dùng concurrentLinkedQueue vì arraylist hoặc list đều không hỗ trợ đa luồng
@@ -31,6 +37,9 @@ public final class Maps {
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
     public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
+    public Queue<Enemy> enemyTanks = new ConcurrentLinkedQueue<>();
+
+    int remainEnemy = 20;
 
     public Maps() {
 
@@ -77,6 +86,13 @@ public final class Maps {
             tankCollide(tank);
             tank.drawTank(g);
         }
+        
+        for (Enemy enemy : enemyTanks) {
+//            tankCollide(enemy);
+            enemy.tankMove(enemy.move());
+            enemy.drawTank(g);
+        }
+        
     }
 
     //vẽ cây
@@ -325,7 +341,67 @@ public final class Maps {
             }
         }
         tank.collideHome(home);
+
+        //enemy
+        for (Enemy enemy : enemyTanks) {
+            enemy.collideWithEnemys(enemyTanks);
+            for (Decor decor : decors) {
+                enemy.collideDecor(decor);
+            }
+            for (EnemyBase enemyBase : obases) {
+                enemy.collideEnemyBase(enemyBase);
+            }
+
+            for (HomeWall homeWall : homeWalls) {
+                enemy.collideWithWall(homeWall);
+            }
+
+            for (StoneWall stoneWall : stoneWalls) {
+                enemy.collideWithWall(stoneWall);
+            }
+
+            for (RockWall rockWall : rockWalls) {
+                enemy.collideWithWall(rockWall);
+            }
+
+            for (River river : rivers) {
+                enemy.collideRiver(river);
+            }
+
+            if (enemy.moveSpeed != 5) {
+                enemy.moveSpeed = 5;
+            }
+            for (Swamp swamp : swamps) {
+                if (enemy.collideSwamp(swamp)) {
+                    enemy.moveSpeed = 2;
+                }
+            }
+
+            for (Road road : roads) {
+                if (enemy.collideRoad(road)) {
+                    enemy.moveSpeed = 10;
+                }
+            }
+            enemy.collideHome(home);
+        }
     }
-    
-    
+
+    public void genEnemy() {
+
+//        utils.utils.map.tanks.add(new Enemy(x, y, random.nextInt(3)));
+        timer = new Timer(1000, this);
+        timer.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Random random = new Random();
+        genRate++;
+
+        for (EnemyBase obase : obases) {
+            if (genRate >= 5 && enemyTanks.size() < 3) {
+                utils.utils.map.enemyTanks.add(new Enemy(obase.x - 40, 0, 0));
+            }
+        }
+    }
 }

@@ -29,11 +29,8 @@ public class Tank implements Serializable, ActionListener {
     public int x, y;
     public int moveSpeed = 5;
     Move move;
-    private int oldX, oldY; //<=== biến để tank chạm vào tường thì quay lại vị trí cũ
+    protected int oldX, oldY; //<=== biến để tank chạm vào tường thì quay lại vị trí cũ
 
-    //control amount of bullet
-    public int bulletAmount = 0;
-    public int maxBulletAmount = 3;
 
     //images
     public static int tank_width = 40;
@@ -57,7 +54,7 @@ public class Tank implements Serializable, ActionListener {
     Image temp;
 
     //check tank live?
-    private boolean live = true;
+    protected boolean live = true;
     public int lifeAmount = 3;
 
     //vòng bảo vệ chống đạn
@@ -232,22 +229,22 @@ public class Tank implements Serializable, ActionListener {
                 case D:
                     temp = (this instanceof Player) ? tank_Imgs[tank_level][2] : otank_Imgs[tank_level][2];
                     y += moveSpeed;
-                    this.oldY -= moveSpeed;
+//                    this.oldY -= moveSpeed;
                     break;
                 case L:
                     temp = (this instanceof Player) ? tank_Imgs[tank_level][3] : otank_Imgs[tank_level][3];
                     x -= moveSpeed;
-                    this.oldX += moveSpeed;
+//                    this.oldX += moveSpeed;
                     break;
                 case U:
                     temp = (this instanceof Player) ? tank_Imgs[tank_level][0] : otank_Imgs[tank_level][0];
                     y -= moveSpeed;
-                    this.oldY += moveSpeed;
+//                    this.oldY += moveSpeed;
                     break;
                 case R:
                     temp = (this instanceof Player) ? tank_Imgs[tank_level][1] : otank_Imgs[tank_level][1];
                     x += moveSpeed;
-                    this.oldX -= moveSpeed;
+//                    this.oldX -= moveSpeed;
                     break;
                 default:
                     break;
@@ -274,7 +271,7 @@ public class Tank implements Serializable, ActionListener {
         if (!live) {
             return null;
         } else {
-            if (move == Move.Stop || bulletAmount > maxBulletAmount) {
+            if (move == Move.Stop) {
                 return null;
             }
             int x = 0;
@@ -295,14 +292,13 @@ public class Tank implements Serializable, ActionListener {
                     break;
                 case U:
                     x = this.x + tank_width / 2 - Bullet.width / 2;
-                    y = this.y + tank_height / 2 - Bullet.height / 2 - 20;
+                    y = this.y + tank_height / 2 - Bullet.height / 2 - 30;
                     break;
             }
 
             Bullet bullet = new Bullet(x, y, move, tank_level, (this instanceof Player) ? 0 : 1);
 
             utils.utils.map.bullets.add(bullet);
-            bulletAmount++;
             return bullet;
         }
     }

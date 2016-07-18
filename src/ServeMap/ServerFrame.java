@@ -55,34 +55,14 @@ public class ServerFrame extends JFrame implements KeyListener, Runnable {
 
         this.add(new ServerPanel());
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                repaint();
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }).start();
+
         new Thread(this).start();
 
         this.addKeyListener(this);
 
     }
 
-//    @Override
-//    public void run() {
-//        while (true) {
-//            repaint();
-//            try {
-//                Thread.sleep(50);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -126,9 +106,10 @@ public class ServerFrame extends JFrame implements KeyListener, Runnable {
     @Override
     public void run() {
         while (true) {
+            utils.map.genEnemy();
             repaint();
             try {
-                Thread.sleep(50);
+                Thread.sleep(20);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
