@@ -32,10 +32,10 @@ public class ServerPanel extends JPanel {
         utils.map.drawStaticComponents(g);
         utils.map.drawNonStaticComponents(g);
        
-        utils.map.drawTank(g);
+//        utils.map.drawTank(g);
 
         utils.map.tankCollide(g);
-        utils.map.drawTrees(g);
+//        utils.map.drawTrees(g);
     }
     
 //    @Override

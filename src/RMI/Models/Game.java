@@ -5,11 +5,15 @@
  */
 package RMI.Models;
 
+import Models.Tank;
 import RMI.Interface.IGame;
+import RMI.Interface.IListTank;
 import ServeMap.ServerFrame;
 import ServeMap.ServerPanel;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import utils.utils;
 
 /**
  *
@@ -31,6 +35,13 @@ public class Game extends UnicastRemoteObject implements IGame{
     @Override
     public ServerPanel getPanel() throws RemoteException {
         return new ServerPanel();
+    }
+
+    @Override
+    public IListTank getListTank() throws RemoteException {
+        IListTank t = new ListTank();
+        t.setTanks(utils.map.tanks);
+        return t;
     }
     
 }

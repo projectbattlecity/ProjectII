@@ -5,11 +5,15 @@
  */
 package Models;
 
+import RMI.Models.ListTank;
 import ServeMap.ServerPanel;
 import java.awt.Graphics;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,14 +34,13 @@ public final class Maps {
 //    ArrayList<Bullet> bullets = new ArrayList<>();
     Queue<Bullet> bullets=new ConcurrentLinkedQueue<>();
 //    List<Bullet> bullets = new Vector<>();
-    public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<Tank> tanks = new ConcurrentLinkedQueue<>();
     Queue<Fire> fires = new ConcurrentLinkedQueue<>();
     Queue<Explosion> explosions = new ConcurrentLinkedQueue<>();
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
 
     public Maps() {
-
     }
 
     public void drawLines(Graphics g) {
@@ -70,6 +73,9 @@ public final class Maps {
     public void drawStaticComponents(Graphics g) {
 
         drawBackGround(g);
+        for (River river : rivers) {
+            river.draw(g);
+        }
 
         for (Swamp swamp : swamps) {
             swamp.draw(g);
@@ -79,13 +85,12 @@ public final class Maps {
             road.draw(g);
         }
 
-        for (River river : rivers) {
-            river.draw(g);
-        }
         
         for (decor decor : decors) {
             decor.draw(g);
         }
+        
+        drawTrees(g);
     }
 
     public boolean bulletCollide(Bullet bullet) {
@@ -204,6 +209,8 @@ public final class Maps {
         for (Fire fire: fires) {
             fire.draw(g);
         }
+        
+        drawTank(g);
     }
 
     public void drawEnemyBases() {

@@ -53,7 +53,7 @@ public class ServerFrame extends JFrame implements KeyListener, Runnable {
 
         utils.map.AddComponents();
 
-        //this.add(new ServerPanel());
+        this.add(new ServerPanel());
 
 //        new Thread(new Runnable() {
 //            @Override

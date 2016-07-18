@@ -6,6 +6,7 @@
 package utils;
 
 import Models.Maps;
+import RMI.Models.Game;
 import java.awt.Toolkit;
 
 /**
@@ -17,4 +18,5 @@ public class utils {
     public static int level = 1;
 
     public static Maps map = new Maps();
+    public static Game objGame;
 }
