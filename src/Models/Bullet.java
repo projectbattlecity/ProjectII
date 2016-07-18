@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.util.Random;
 import javax.annotation.Resource;
 
 /**
@@ -21,33 +20,17 @@ public class Bullet implements Serializable {
 
     // move bullet
     public int x, y;
-
-    private Tank.Move move;
+    public int moveSpeed = 12;
+    private Tank.Move move; //hướng của đạn
     private int tank_level;
 
-    public int getTank_level() {
-        return tank_level;
-    }
-
-    public void setTank_level(int tank_level) {
-        this.tank_level = tank_level;
-    }
-
-    public Tank.Move getMove() {
-        return move;
-    }
-
-    public void setMove(Tank.Move move) {
-        this.move = move;
-    }
-
     // images
-    private int checkPlayer = 0;
+    private int checkPlayer = 0; // <======== biến check đạn của player là 0 hoặc của enemy là 1 (để vẽ)
     public static int width = 15;
     public static int height = 25;
-    public static int moveSpeed = 12;
+
     private static Toolkit tk = Toolkit.getDefaultToolkit();
-    public static Image[][] bullet_Imgs
+    Image[][] bullet_Imgs
             = {
                 {
                     tk.getImage(Resource.class.getResource("/Images/Bullet/bulletU.gif")),
@@ -64,14 +47,6 @@ public class Bullet implements Serializable {
             };
 
     Image imgTemp = bullet_Imgs[checkPlayer][0];
-
-    public int getCheckPlayer() {
-        return checkPlayer;
-    }
-
-    public void setCheckPlayer(int checkPlayer) {
-        this.checkPlayer = checkPlayer;
-    }
 
     public int getX() {
         return x;
@@ -101,7 +76,6 @@ public class Bullet implements Serializable {
     }
 
     public void drawBullet(Graphics g) {
-//        g.drawRect(x, y, width, height);
         g.drawImage(imgTemp, x, y, width, height, null);
     }
 
@@ -109,8 +83,7 @@ public class Bullet implements Serializable {
         return new Rectangle(x, y, width, height);
     }
 
-    //bat va cham voi object
-    //bullet move
+    //dịch chuyển của đạn
     public void bulletMove() {
         switch (move) {
             case D:
@@ -148,21 +121,23 @@ public class Bullet implements Serializable {
         }
     }
 
+    //bat va cham voi object
     public boolean hitTank(Tank t) {
 
         if (this.getRect().intersects(t.getRect()) && t.isLive()) {
-//        if (this.getRect().intersects(t.getRect()) && t.isLive() && !(t instanceof Player)) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            if (t.isLive() && t.getLifeAmount() > 0) {
-                t.setLifeAmount(t.getLifeAmount() - 1);
-                if (t.getLifeAmount() <= 0) {
-                    t.setLive(false);
-                    utils.utils.map.bigExplosions.add(new BigExplosion(t.getX(), t.getY()));
-                    Server.ServerMain.serverTank.bulletAmount--;
+            if (!t.isShield()) {
+                utils.utils.map.explosions.add(new Explosion(x, y));
+                utils.utils.map.bigExplosions.add(new BigExplosion(t.getX(), t.getY()));
+                if (t.isLive() && t.lifeAmount > 0) {
+                    t.lifeAmount--;
+                    if (t.lifeAmount > 0) {
+                        t.genPlayer();
+                    } else {
+                        t.setLive(false);
+                    }
                 }
-            } else {
-                t.setLive(false);
             }
+            Server.ServerMain.serverTank.bulletAmount--;
             utils.utils.map.bullets.remove(this);
             return true;
         }
@@ -214,7 +189,7 @@ public class Bullet implements Serializable {
         return false;
     }
 
-    public boolean hitDecor(decor d) {
+    public boolean hitDecor(Decor d) {
         if (this.getRect().intersects(d.getRect())) {
             if (tank_level > 1) {
                 utils.utils.map.explosions.add(new Explosion(x, y));
@@ -244,16 +219,16 @@ public class Bullet implements Serializable {
 
     public boolean hitEnemyBase(EnemyBase b) {
         if (this.getRect().intersects(b.getRect()) && b.isLive()) {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                Server.ServerMain.serverTank.bulletAmount--;
-                utils.utils.map.bullets.remove(this);
-                b.life--;
-                if (b.life <= 0) {
-                    utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
-                    b.setLive(false);
-                    utils.utils.map.obases.remove(b);
-                }
-                return true;
+            utils.utils.map.explosions.add(new Explosion(x, y));
+            Server.ServerMain.serverTank.bulletAmount--;
+            utils.utils.map.bullets.remove(this);
+            b.life--;
+            if (b.life <= 0) {
+                utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
+                b.setLive(false);
+                utils.utils.map.obases.remove(b);
+            }
+            return true;
         }
         return false;
     }

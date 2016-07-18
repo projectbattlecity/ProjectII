@@ -7,7 +7,6 @@ package Models;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.Random;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -21,10 +20,9 @@ public class Background {
         tk.getImage(Resource.class.getResource("/Images/Maps/sand1.jpg"))
     };
 //    Random rd = new Random();
-    Image temp = bg[1];
     
     public void drawBg(Graphics g)
     {
-        g.drawImage(temp, 0, 0, 800, 600, null);
+        g.drawImage(bg[0], 0, 0, 800, 600, null);
     }
 }

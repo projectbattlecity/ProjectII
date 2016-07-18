@@ -9,7 +9,7 @@ public class Explosion {
 	private int x, y;
 	private boolean live = true; 
 
-	private static Image[] imgs = {
+	Image[] imgs = {
 			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_01.png")),
 			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_02.png")),
 			tk.getImage(Resource.class.getResource("/Images/Explosion/Explosion_03.png")),

@@ -17,4 +17,5 @@ public class utils {
     public static int level = 1;
 
     public static Maps map = new Maps();
+    public static int x1 = 5*40, x2 = 13 * 40, y1 = 12*40, y2 = 12*40;
 }

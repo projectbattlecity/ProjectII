@@ -16,12 +16,12 @@ import static utils.utils.tk;
  * @author c1409l0937
  */
 public class RockWall {
-    private int width = 40; 
+
+    private int width = 40;
     private int height = 40;
-    
-    int x,y;
-    public boolean isDes = false;
-    private static Image rockWallImg = tk.getImage(Resource.class.getResource("/Images/Maps/rock.png"));
+
+    int x, y;
+    Image rockWallImg = tk.getImage(Resource.class.getResource("/Images/Maps/rock.png"));
 
     public RockWall(int x, int y) {
         this.x = x;
@@ -31,13 +31,10 @@ public class RockWall {
     public RockWall() {
     }
 
-    
-    
-    public void draw(Graphics g)
-    {
-        g.drawImage(rockWallImg, x, y,width,height, null);
+    public void draw(Graphics g) {
+        g.drawImage(rockWallImg, x, y, width, height, null);
     }
-    
+
     public Rectangle getRect() {
         return new Rectangle(x, y, width, height);
     }

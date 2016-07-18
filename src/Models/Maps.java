@@ -18,26 +18,50 @@ public final class Maps {
 
     Home home;
 
-    Queue<RockWall> rockWalls = new ConcurrentLinkedQueue<>();
+    Queue<RockWall> rockWalls = new ConcurrentLinkedQueue<>(); // dùng concurrentLinkedQueue vì arraylist hoặc list đều không hỗ trợ đa luồng
     Queue<StoneWall> stoneWalls = new ConcurrentLinkedQueue<>();
     Queue<River> rivers = new ConcurrentLinkedQueue<>();
     Queue<Tree> trees = new ConcurrentLinkedQueue<>();
     Queue<Swamp> swamps = new ConcurrentLinkedQueue<>();
     Queue<HomeWall> homeWalls = new ConcurrentLinkedQueue<>();
     Queue<EnemyBase> obases = new ConcurrentLinkedQueue<>();
-    Queue<decor> decors = new ConcurrentLinkedQueue<>();
-//    ArrayList<Bullet> bullets = new ArrayList<>();
-    Queue<Bullet> bullets=new ConcurrentLinkedQueue<>();
-//    List<Bullet> bullets = new Vector<>();
-    public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
+    Queue<Decor> decors = new ConcurrentLinkedQueue<>();
+    Queue<Bullet> bullets = new ConcurrentLinkedQueue<>();
     Queue<Explosion> explosions = new ConcurrentLinkedQueue<>();
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
+    public Queue<Tank> tanks = new ConcurrentLinkedQueue<>();
 
     public Maps() {
 
     }
 
+    //thêm các components cho map
+    public void AddComponents() {
+        drawLevel(utils.utils.level);
+        drawHomeWall();
+        drawEnemyBases();
+    }
+
+    //clear toàn bộ map
+    public void clearMap() {
+        rockWalls.clear();
+        stoneWalls.clear();
+        rivers.clear();
+        trees.clear();
+        swamps.clear();
+        homeWalls.clear();
+        obases.clear();
+        decors.clear();
+        bullets.clear();
+        tanks.clear();
+        explosions.clear();
+        bigExplosions.clear();
+        roads.clear();
+    }
+
+    // === các hàm vẽ map ===
+    //vẽ đường kẻ
     public void drawLines(Graphics g) {
         for (int i = 0; i < ServerPanel.screen_height / 40; i++) {
             g.drawLine(0, i * 40, 800, i * 40);
@@ -47,24 +71,22 @@ public final class Maps {
         }
     }
 
+    //vẽ tanks
     public void drawTank(Graphics g) {
         for (Tank tank : tanks) {
+            tankCollide(tank);
             tank.drawTank(g);
         }
     }
 
-    public void AddComponents() {
-        drawLevel(utils.utils.level);
-        drawHomeWall();
-        drawEnemyBases();
-    }
-
+    //vẽ cây
     public void drawTrees(Graphics g) {
         for (Tree tree : trees) {
             tree.draw(g);
         }
     }
 
+    //vẽ các components không thay đổi
     public void drawStaticComponents(Graphics g) {
 
         drawBackGround(g);
@@ -80,98 +102,13 @@ public final class Maps {
         for (River river : rivers) {
             river.draw(g);
         }
-        
-        for (decor decor : decors) {
+
+        for (Decor decor : decors) {
             decor.draw(g);
         }
     }
 
-    public boolean bulletCollide(Bullet bullet) {
-        bullet.hitHome();
-        for (Tank tank : tanks) {
-            if (bullet.hitTank(tank)) {
-                return true;
-            }
-        }
-        for (EnemyBase enemyBase : obases) {
-            if (bullet.hitEnemyBase(enemyBase)) {
-                return true;
-            }
-        }
-        for (RockWall rockWall : rockWalls) {
-            if (bullet.hitWall(rockWall)) {
-                return true;
-            }
-        }
-        for (HomeWall homeWall : homeWalls) {
-            if (bullet.hitWall(homeWall)) {
-                return true;
-            }
-        }
-        for (StoneWall stoneWall : stoneWalls) {
-            if (bullet.hitWall(stoneWall)) {
-                return true;
-            }
-        }
-        for (decor decor : decors) {
-            if (bullet.hitDecor(decor)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void tankCollide(Graphics g) {
-        for (Tank tank : tanks) {
-
-            tank.collideWithTanks(tanks);
-            for (decor decor : decors) {
-                tank.collideDecor(decor);
-                decor.draw(g);
-            }
-            for (EnemyBase enemyBase : obases) {
-                tank.collideEnemyBase(enemyBase);
-                enemyBase.draw(g);
-            }
-
-            for (HomeWall homeWall : homeWalls) {
-                tank.collideWithWall(homeWall);
-                homeWall.draw(g);
-            }
-
-            for (StoneWall stoneWall : stoneWalls) {
-                tank.collideWithWall(stoneWall);
-                stoneWall.draw(g);
-            }
-
-            for (RockWall rockWall : rockWalls) {
-                tank.collideWithWall(rockWall);
-                rockWall.draw(g);
-            }
-
-            for (River river : rivers) {
-                tank.collideRiver(river);
-                river.draw(g);
-            }
-
-            if (tank.moveSpeed != 5) {
-                tank.moveSpeed = 5;
-            }
-            for (Swamp swamp : swamps) {
-                if (tank.collideSwamp(swamp)) {
-                    tank.moveSpeed = 2;
-                }
-            }
-
-            for (Road road : roads) {
-                if (tank.collideRoad(road)) {
-                    tank.moveSpeed = 10;
-                }
-            }
-            tank.collideHome(home);
-        }
-    }
-
+    //vẽ các components thay đổi
     public void drawNonStaticComponents(Graphics g) {
         drawHome(g);
 
@@ -199,7 +136,7 @@ public final class Maps {
         for (BigExplosion ex : bigExplosions) {
             ex.draw(g);
         }
-        
+
     }
 
     public void drawEnemyBases() {
@@ -295,17 +232,15 @@ public final class Maps {
 
                 //decor
                 for (int i = 2; i < 4; i++) {
-                    decors.add(new decor(i * 40, 14 * 40, 40, 40, 6));
-                    decors.add(new decor((20 - i - 1) * 40, 14 * 40, 40, 40, 6));
+                    decors.add(new Decor(i * 40, 14 * 40, 40, 40, 6));
+                    decors.add(new Decor((20 - i - 1) * 40, 14 * 40, 40, 40, 6));
                 }
-                decors.add(new decor(5 * 40, 12 * 40, 80, 80, 1));
-                decors.add(new decor(13 * 40, 12 * 40, 80, 80, 1));
 
-                decors.add(new decor(6 * 40, 7 * 40, 40, 80, 5));
-                decors.add(new decor(13 * 40, 7 * 40, 40, 80, 5));
+                decors.add(new Decor(6 * 40, 7 * 40, 40, 80, 5));
+                decors.add(new Decor(13 * 40, 7 * 40, 40, 80, 5));
 
-                decors.add(new decor(2 * 40, 12 * 40, 80, 40, 8));
-                decors.add(new decor((20 - 3 - 1) * 40, 12 * 40, 80, 40, 8));
+                decors.add(new Decor(2 * 40, 12 * 40, 80, 40, 8));
+                decors.add(new Decor((20 - 3 - 1) * 40, 12 * 40, 80, 40, 8));
                 break;
         }
     }
@@ -314,4 +249,83 @@ public final class Maps {
         new Background().drawBg(g);
     }
 
+    //các hàm bắt va chạm của đạn và tank
+    public boolean bulletCollide(Bullet bullet) {
+        bullet.hitHome();
+        for (Tank tank : tanks) {
+            if (bullet.hitTank(tank)) {
+                return true;
+            }
+        }
+        for (EnemyBase enemyBase : obases) {
+            if (bullet.hitEnemyBase(enemyBase)) {
+                return true;
+            }
+        }
+        for (RockWall rockWall : rockWalls) {
+            if (bullet.hitWall(rockWall)) {
+                return true;
+            }
+        }
+        for (HomeWall homeWall : homeWalls) {
+            if (bullet.hitWall(homeWall)) {
+                return true;
+            }
+        }
+        for (StoneWall stoneWall : stoneWalls) {
+            if (bullet.hitWall(stoneWall)) {
+                return true;
+            }
+        }
+        for (Decor decor : decors) {
+            if (bullet.hitDecor(decor)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void tankCollide(Tank tank) {
+        tank.collideWithTanks(tanks);
+        for (Decor decor : decors) {
+            tank.collideDecor(decor);
+        }
+        for (EnemyBase enemyBase : obases) {
+            tank.collideEnemyBase(enemyBase);
+        }
+
+        for (HomeWall homeWall : homeWalls) {
+            tank.collideWithWall(homeWall);
+        }
+
+        for (StoneWall stoneWall : stoneWalls) {
+            tank.collideWithWall(stoneWall);
+        }
+
+        for (RockWall rockWall : rockWalls) {
+            tank.collideWithWall(rockWall);
+        }
+
+        for (River river : rivers) {
+            tank.collideRiver(river);
+        }
+
+        if (tank.moveSpeed != 5) {
+            tank.moveSpeed = 5;
+        }
+        for (Swamp swamp : swamps) {
+            if (tank.collideSwamp(swamp)) {
+                tank.moveSpeed = 2;
+            }
+        }
+
+        for (Road road : roads) {
+            if (tank.collideRoad(road)) {
+                tank.moveSpeed = 10;
+            }
+        }
+        tank.collideHome(home);
+    }
+    
+    
 }

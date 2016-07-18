@@ -9,56 +9,44 @@ import java.awt.Graphics;
 import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Queue;
 import javax.annotation.Resource;
+import javax.swing.Timer;
+import static utils.utils.tk;
 
 /**
  *
  * @author DK
  */
-public class Tank implements Serializable {
+public class Tank implements Serializable, ActionListener {
 
+    // move tank
     public static enum Move {
         U, D, R, L, Stop;
     }
-
-    // move tank
     public int x, y;
-    private int oldX, oldY;
     public int moveSpeed = 5;
+    Move move;
+    private int oldX, oldY; //<=== biến để tank chạm vào tường thì quay lại vị trí cũ
 
     //control amount of bullet
     public int bulletAmount = 0;
     public int maxBulletAmount = 3;
 
-    Move move;
-
-    // images
+    //images
     public static int tank_width = 40;
     public static int tank_height = 40;
-
-    //check tank live?
-    private boolean live = true;
-    private int lifeAmount = 2;
-
-    public int getLifeAmount() {
-        return lifeAmount;
-    }
-
-    public void setLifeAmount(int lifeAmount) {
-        this.lifeAmount = lifeAmount;
-    }
-
-    private static Toolkit tk = Toolkit.getDefaultToolkit();
-    public static Image[][] tank_Imgs
+    Image shieldImg = tk.getImage(Resource.class.getResource("/Images/Effect/shields.png"));
+    Image[][] tank_Imgs
             = {
                 {tk.getImage(Resource.class.getResource("/Images/Tanks/tank1U.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/tank1R.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/tank1D.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/tank1L.png"))}
             };
-    public static Image[][] otank_Imgs
+    Image[][] otank_Imgs
             = {
                 {tk.getImage(Resource.class.getResource("/Images/Tanks/otank1U.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/otank1R.png")),
@@ -66,10 +54,30 @@ public class Tank implements Serializable {
                     tk.getImage(Resource.class.getResource("/Images/Tanks/otank1L.png"))}
             };
 
-    private Image temp;
+    Image temp;
+
+    //check tank live?
+    private boolean live = true;
+    public int lifeAmount = 3;
+
+    //vòng bảo vệ chống đạn
+    private boolean shield = false;
 
     //level of tanks
     public int tank_level = 0;
+
+    //timer check vòng bảo vệ
+    Timer timer;
+    int time=0;
+
+    public boolean isShield() {
+        return shield;
+    }
+
+    //
+    public void setShield(boolean shield) {
+        this.shield = shield;
+    }
 
     public Move getMove() {
         return move;
@@ -108,9 +116,11 @@ public class Tank implements Serializable {
     }
 
     public void drawTank(Graphics g) {
-        if (live) {
-//            g.drawRect(x, y, tank_width, tank_height);
+        if (live && !shield) {
             g.drawImage(temp, x, y, tank_width, tank_height, null);
+        } else if (live && shield) {
+            g.drawImage(temp, x, y, tank_width, tank_height, null);
+            g.drawImage(shieldImg, x-5, y-5, tank_width +10, tank_height+10, null);
         } else {
             utils.utils.map.tanks.remove(this);
         }
@@ -180,7 +190,7 @@ public class Tank implements Serializable {
         return false;
     }
 
-    public boolean collideDecor(decor d) {
+    public boolean collideDecor(Decor d) {
         if (this.live && this.getRect().intersects(d.getRect())) {
             this.changToOldDir();
             return true;
@@ -294,6 +304,33 @@ public class Tank implements Serializable {
             utils.utils.map.bullets.add(bullet);
             bulletAmount++;
             return bullet;
+        }
+    }
+
+    public void genPlayer() {
+        utils.utils.map.tanks.remove(this);
+        x= utils.utils.x2;
+        y= utils.utils.y2;
+        oldX= utils.utils.x2;
+        oldY= utils.utils.y2;
+        
+        timer = new Timer(1000, this);
+        timer.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        time++;
+        if(time == 2)
+        {
+            utils.utils.map.tanks.add(this);
+            shield = true;
+        }
+        if(time>= 5)
+        {
+            time =0;
+            shield = false;
+            timer.stop();
         }
     }
 }

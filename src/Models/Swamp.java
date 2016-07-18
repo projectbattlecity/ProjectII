@@ -16,12 +16,13 @@ import static utils.utils.tk;
  * @author c1409l0937
  */
 public class Swamp {
-    private int width = 40; 
+
+    private int width = 40;
     private int height = 40;
-    
-    int x,y;
-    
-    private static Image swampImg = tk.getImage(Resource.class.getResource("/Images/Maps/swamp.gif"));
+
+    int x, y;
+
+    Image swampImg = tk.getImage(Resource.class.getResource("/Images/Maps/swamp.gif"));
 
     public Swamp(int x, int y) {
         this.x = x;
@@ -30,12 +31,11 @@ public class Swamp {
 
     public Swamp() {
     }
-    
-    public void draw(Graphics g)
-    {
-        g.drawImage(swampImg, x, y,width,height, null);
+
+    public void draw(Graphics g) {
+        g.drawImage(swampImg, x, y, width, height, null);
     }
-    
+
     public Rectangle getRect() {
         return new Rectangle(x, y, width, height);
     }

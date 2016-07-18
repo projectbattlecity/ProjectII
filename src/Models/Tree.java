@@ -16,12 +16,13 @@ import static utils.utils.tk;
  * @author c1409l0937
  */
 public class Tree {
-    private int width = 40; 
-    private int height = 40;
-    
-    int x,y;
 
-    private static Image treeImg = tk.getImage(Resource.class.getResource("/Images/Maps/tree.gif"));
+    private int width = 40;
+    private int height = 40;
+
+    int x, y;
+
+    Image treeImg = tk.getImage(Resource.class.getResource("/Images/Maps/tree.gif"));
 
     public Tree() {
     }
@@ -31,12 +32,10 @@ public class Tree {
         this.y = y;
     }
 
-    
-    public void draw(Graphics g)
-    {
-        g.drawImage(treeImg, x, y,width,height, null);
+    public void draw(Graphics g) {
+        g.drawImage(treeImg, x, y, width, height, null);
     }
-    
+
     public Rectangle getRect() {
         return new Rectangle(x, y, width, height);
     }

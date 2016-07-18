@@ -18,9 +18,11 @@ public class Enemy extends Tank{
     public Enemy(int x, int y, int tank_level) {
         super(x, y);
         this.tank_level = tank_level;
+        this.lifeAmount = 1;
     }
     
     public Enemy() {
     }
+    
     
 }

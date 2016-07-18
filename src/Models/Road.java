@@ -16,12 +16,13 @@ import static utils.utils.tk;
  * @author ASUS
  */
 public class Road {
-    private int width = 40; 
+
+    private int width = 40;
     private int height = 40;
-    
-    int x,y;
-    
-    private static Image roadImg = tk.getImage(Resource.class.getResource("/Images/Maps/Road.png"));
+
+    private int x, y;
+
+    Image roadImg = tk.getImage(Resource.class.getResource("/Images/Maps/Road.png"));
 
     public Road(int x, int y) {
         this.x = x;
@@ -30,12 +31,11 @@ public class Road {
 
     public Road() {
     }
-    
-    public void draw(Graphics g)
-    {
-        g.drawImage(roadImg, x, y,width,height, null);
+
+    public void draw(Graphics g) {
+        g.drawImage(roadImg, x, y, width, height, null);
     }
-    
+
     public Rectangle getRect() {
         return new Rectangle(x, y, width, height);
     }

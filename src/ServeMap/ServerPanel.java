@@ -5,7 +5,6 @@
  */
 package ServeMap;
 
-import Server.ServerMain;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -34,17 +33,6 @@ public class ServerPanel extends JPanel {
        
         utils.map.drawTank(g);
 
-        utils.map.tankCollide(g);
         utils.map.drawTrees(g);
     }
-    
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        utils.map.drawStaticComponents(g);
-//        utils.map.drawNonStaticComponents(g);
-//        ServerMain.serverTank.drawTank(g);
-//        ServerMain.clientTank.drawTank(g);
-//        
-//    }
 }

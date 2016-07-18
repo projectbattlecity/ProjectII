@@ -21,7 +21,7 @@ public class EnemyBase {
     private int height = 80;
 
     public int x, y;
-    public int life = 3;
+    public int life = 3; // <==== số phát bắn để diệt
 
     private boolean live = true;
 
@@ -33,7 +33,7 @@ public class EnemyBase {
         this.live = live;
     }
 
-    private static Image[] obaseImg
+    Image[] obaseImg
             = {
                 tk.getImage(Resource.class.getResource("/Images/Maps/enemygen3.png")),
                 tk.getImage(Resource.class.getResource("/Images/Maps/enemygen2.png")),

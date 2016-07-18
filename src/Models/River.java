@@ -19,9 +19,9 @@ public class River {
     private int width = 40; 
     private int height = 40;
     
-    int x,y;
+    private int x,y;
     
-    private static Image riverImg = tk.getImage(Resource.class.getResource("/Images/Maps/river.gif"));
+    Image riverImg = tk.getImage(Resource.class.getResource("/Images/Maps/river.gif"));
 
     public River(int x, int y) {
         this.x = x;
