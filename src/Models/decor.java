@@ -14,13 +14,13 @@ import static utils.utils.tk;
  *
  * @author especsily
  */
-public class decor {
+public class Decor {
     private int width; 
     private int height;
     
     int x,y;
-    private int index;
-    private Image[] decorImg = 
+    private int index; //<== biến để vẽ đúng decor cần
+    Image[] decorImg = 
     {
         tk.getImage(Resource.class.getResource("/Images/Maps/decor.png")),
         tk.getImage(Resource.class.getResource("/Images/Maps/decor1.gif")),
@@ -33,10 +33,10 @@ public class decor {
         tk.getImage(Resource.class.getResource("/Images/Maps/decor8.gif"))
     };
 
-    public decor() {
+    public Decor() {
     }
 
-    public decor(int x, int y,int width, int height, int index) {
+    public Decor(int x, int y,int width, int height, int index) {
         this.width = width;
         this.height = height;
         this.x = x;
