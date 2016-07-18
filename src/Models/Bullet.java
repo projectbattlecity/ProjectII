@@ -163,7 +163,7 @@ public class Bullet implements Serializable {
                 t.setLive(false);
             }
 
-//            utils.utils.map.bullets.remove(this);
+            utils.utils.map.bullets.remove(this);
             return true;
         }
         return false;

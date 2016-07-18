@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public final class Maps {
 
-    Home home;
+    public static Home home;
 
     Queue<RockWall> rockWalls = new ConcurrentLinkedQueue<>();
     Queue<StoneWall> stoneWalls = new ConcurrentLinkedQueue<>();
@@ -31,6 +31,7 @@ public final class Maps {
     Queue<Bullet> bullets=new ConcurrentLinkedQueue<>();
 //    List<Bullet> bullets = new Vector<>();
     public ArrayList<Tank> tanks = new ArrayList<>();
+    public ArrayList<Enemy> enemyTank = new ArrayList<>();
     Queue<Explosion> explosions = new ConcurrentLinkedQueue<>();
     Queue<BigExplosion> bigExplosions = new ConcurrentLinkedQueue<>();
     Queue<Road> roads = new ConcurrentLinkedQueue<>();
@@ -51,6 +52,10 @@ public final class Maps {
     public void drawTank(Graphics g) {
         for (Tank tank : tanks) {
             tank.drawTank(g);
+        }
+        for(Enemy enemy : enemyTank){
+            enemy.tankMove(enemy.move());
+            enemy.drawTank(g);
         }
     }
 
@@ -90,6 +95,11 @@ public final class Maps {
         bullet.hitHome();
         for (Tank tank : tanks) {
             if (bullet.hitTank(tank)) {
+                return true;
+            }
+        }
+        for(Enemy enemy : enemyTank){
+            if(bullet.hitTank(enemy)){
                 return true;
             }
         }
@@ -169,6 +179,54 @@ public final class Maps {
                 }
             }
             tank.collideHome(home);
+        }
+        
+        for(Enemy enemy : enemyTank){
+            enemy.collideWithEnemys(enemyTank);
+            for (decor decor : decors) {
+                enemy.collideDecor(decor);
+                decor.draw(g);
+            }
+            for (EnemyBase enemyBase : obases) {
+                enemy.collideEnemyBase(enemyBase);
+                enemyBase.draw(g);
+            }
+
+            for (HomeWall homeWall : homeWalls) {
+                enemy.collideWithWall(homeWall);
+                homeWall.draw(g);
+            }
+
+            for (StoneWall stoneWall : stoneWalls) {
+                enemy.collideWithWall(stoneWall);
+                stoneWall.draw(g);
+            }
+
+            for (RockWall rockWall : rockWalls) {
+                enemy.collideWithWall(rockWall);
+                rockWall.draw(g);
+            }
+
+            for (River river : rivers) {
+                enemy.collideRiver(river);
+                river.draw(g);
+            }
+
+            if (enemy.moveSpeed != 5) {
+                enemy.moveSpeed = 5;
+            }
+            for (Swamp swamp : swamps) {
+                if (enemy.collideSwamp(swamp)) {
+                    enemy.moveSpeed = 2;
+                }
+            }
+
+            for (Road road : roads) {
+                if (enemy.collideRoad(road)) {
+                    enemy.moveSpeed = 10;
+                }
+            }
+            enemy.collideHome(home);
         }
     }
 

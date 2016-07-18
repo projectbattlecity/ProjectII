@@ -25,12 +25,12 @@ public class Tank implements Serializable {
 
     // move tank
     public int x, y;
-    private int oldX, oldY;
+    protected int oldX, oldY;
     public int moveSpeed = 5;
 
     //control amount of bullet
     public int bulletAmount = 0;
-    private int maxBulletAmount = 3;
+    protected int maxBulletAmount = 3;
 
     Move move;
 
@@ -39,8 +39,8 @@ public class Tank implements Serializable {
     public static int tank_height = 40;
 
     //check tank live?
-    private boolean live = true;
-    private int lifeAmount = 2;
+    protected boolean live = true;
+    protected int lifeAmount = 2;
 
     public int getLifeAmount() {
         return lifeAmount;
@@ -50,7 +50,7 @@ public class Tank implements Serializable {
         this.lifeAmount = lifeAmount;
     }
 
-    private static Toolkit tk = Toolkit.getDefaultToolkit();
+    protected static Toolkit tk = Toolkit.getDefaultToolkit();
     public static Image[][] tank_Imgs
             = {
                 {tk.getImage(Resource.class.getResource("/Images/Tanks/tank1U.png")),
@@ -66,7 +66,7 @@ public class Tank implements Serializable {
                     tk.getImage(Resource.class.getResource("/Images/Tanks/otank1L.png"))}
             };
 
-    private Image temp;
+    protected Image temp;
 
     //level of tanks
     public int tank_level = 0;
