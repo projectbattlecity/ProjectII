@@ -10,7 +10,15 @@ import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 /**
  *
@@ -134,6 +142,9 @@ public class Bullet implements Serializable {
                     } else {
                         t.setLive(false);
                     }
+                    if (t instanceof Player) {
+                        Audio.playerDeath();
+                    }
                 }
             }
             utils.utils.map.bullets.remove(this);
@@ -147,6 +158,7 @@ public class Bullet implements Serializable {
             utils.utils.map.explosions.add(new Explosion(x, y));
             utils.utils.map.bullets.remove(this);
             utils.utils.map.homeWalls.remove(w);
+            Audio.colideHomeWall();
             return true;
         }
         return false;
