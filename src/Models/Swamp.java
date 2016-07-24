@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,14 +16,14 @@ import static utils.utils.tk;
  *
  * @author c1409l0937
  */
-public class Swamp {
+public class Swamp implements Serializable{
 
-    private int width = 40;
-    private int height = 40;
+    public  int width = 40;
+    public  int height = 40;
 
-    int x, y;
+    public int x, y;
 
-    Image swampImg = tk.getImage(Resource.class.getResource("/Images/Maps/swamp.gif"));
+    transient Image swampImg = tk.getImage(Resource.class.getResource("/Images/Maps/swamp.gif"));
 
     public Swamp(int x, int y) {
         this.x = x;

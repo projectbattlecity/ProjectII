@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,10 +16,10 @@ import static utils.utils.tk;
  *
  * @author ASUS
  */
-public class Home {
+public class Home implements Serializable{
 
     public int x, y;
-    private boolean live = true;
+    public boolean live = true;
 
     public boolean isLive() {
         return live;
@@ -28,13 +29,13 @@ public class Home {
         this.live = live;
     }
 
-    private int width = 80, height = 80;
+    public int width = 80, height = 80;
 
-    Image[] homeImgs
+    transient Image[] homeImgs
             = {
                 tk.getImage(Resource.class.getResource("/Images/Maps/Home.gif")),
-                tk.getImage(Resource.class.getResource("/Images/Maps/Home2.gif")),
-                tk.getImage(Resource.class.getResource("/Images/Maps/Home3.png")),
+                tk.getImage(this.getClass().getResource("/Images/Maps/Home2.gif")),
+                tk.getImage(Resource.class.getResource("/Images/Maps/Home3.gif")),
                 tk.getImage(Resource.class.getResource("/Images/Maps/decor.png")),};
 
     public Home(int x, int y) {

@@ -2,32 +2,18 @@ package Models;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
-public class BigExplosion {
+public class BigExplosion implements Serializable{
 
-    private int x, y;
+    public int x, y;
+    public int width = 100, height = 100;
 
-    public int getX() {
-        return x;
-    }
+    public boolean live = true;
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    private boolean live = true;
-
-    Image[] imgs = {
+    transient Image[] imgs = {
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_01.png")),
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_02.png")),
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_03.png")),
@@ -44,11 +30,19 @@ public class BigExplosion {
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_14.png")),
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_15.png")),
         tk.getImage(Resource.class.getResource("/Images/Explosion/bigex_16.png")),};
-    int step = 0;
+    public int step = 0;
 
     public BigExplosion(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+    
+    
+    public BigExplosion(int x, int y, boolean live, int step) {
+        this.x = x;
+        this.y = y;
+        this.live = live;
+        this.step = step;
     }
 
     public void draw(Graphics g) {
@@ -63,7 +57,7 @@ public class BigExplosion {
             return;
         }
 
-        g.drawImage(imgs[step], x, y - 40, 100, 100, null);
+        g.drawImage(imgs[step], x, y - 40, width, height, null);
         step++;
     }
 }

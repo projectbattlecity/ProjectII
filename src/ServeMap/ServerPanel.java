@@ -7,8 +7,11 @@ package ServeMap;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
+import java.awt.Image;
+import javax.annotation.Resource;
 import javax.swing.JPanel;
 import utils.utils;
+import static utils.utils.tk;
 
 /**
  *
@@ -17,6 +20,7 @@ import utils.utils;
 public class ServerPanel extends JPanel {
 
     public static int screen_width = 800, screen_height = 600;
+    Image gameover = tk.getImage(Resource.class.getResource("/Images/gameover.jpg"));
 
     public ServerPanel() {
         this.setSize(screen_width, screen_height);
@@ -30,9 +34,18 @@ public class ServerPanel extends JPanel {
 
         utils.map.drawStaticComponents(g);
         utils.map.drawNonStaticComponents(g);
-       
+
+//        utils.map.drawLines(g);
         utils.map.drawTank(g);
 
         utils.map.drawTrees(g);
+
+        if (utils.map.checkLose()) {
+            g.drawImage(gameover, 7 * 40, 4 * 40, 40 * 6, 40 * 4, null);
+            utils.level = 1;
+            utils.map.tanks.clear();
+        }
+        
+        
     }
 }

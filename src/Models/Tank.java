@@ -6,66 +6,96 @@
 package Models;
 
 import java.awt.Graphics;
-import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.Queue;
 import javax.annotation.Resource;
 import javax.swing.Timer;
 import static utils.utils.tk;
+import static utils.utils.audio;
 
 /**
  *
  * @author DK
  */
-public class Tank implements Serializable, ActionListener {
+public class Tank implements Serializable {
 
     // move tank
     public static enum Move {
         U, D, R, L, Stop;
     }
     public int x, y;
-    public int moveSpeed = 5;
-    Move move;
+    public int moveSpeed = 4;
+    public Move move = Move.U;
     protected int oldX, oldY; //<=== biến để tank chạm vào tường thì quay lại vị trí cũ
-
 
     //images
     public static int tank_width = 40;
     public static int tank_height = 40;
-    Image shieldImg = tk.getImage(Resource.class.getResource("/Images/Effect/shields.png"));
-    Image[][] tank_Imgs
+    transient Image shieldImg = tk.getImage(Resource.class.getResource("/Images/Effect/shields.png"));
+    transient Image[][] tank_Imgs
             = {
                 {tk.getImage(Resource.class.getResource("/Images/Tanks/tank1U.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/tank1R.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/tank1D.png")),
-                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank1L.png"))}
-            };
-    Image[][] otank_Imgs
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank1L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/tank2U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank2R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank2D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank2L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/tank3U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank3R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank3D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank3L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/tank4U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank4R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank4D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/tank4L.png"))},};
+    transient Image[][] otank_Imgs
             = {
                 {tk.getImage(Resource.class.getResource("/Images/Tanks/otank1U.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/otank1R.png")),
                     tk.getImage(Resource.class.getResource("/Images/Tanks/otank1D.png")),
-                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank1L.png"))}
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank1L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/otank2U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank2R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank2D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank2L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/otank3U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank3R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank3D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank3L.png"))},
+                {tk.getImage(Resource.class.getResource("/Images/Tanks/otank4U.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank4R.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank4D.png")),
+                    tk.getImage(Resource.class.getResource("/Images/Tanks/otank4L.png"))
+                }
             };
 
-    Image temp;
+    transient Image temp;
 
     //check tank live?
-    protected boolean live = true;
+    public boolean live = true;
     public int lifeAmount = 3;
 
     //vòng bảo vệ chống đạn
-    private boolean shield = false;
+    public boolean shield = false;
 
     //level of tanks
     public int tank_level = 0;
 
     //timer check vòng bảo vệ
-    Timer timer;
-    int time=0;
+    public Timer timer;
+    public int time = 0;
+
+    //fire delay
+    public Timer timerFire;
+    public boolean shootable = true;
+    public double timeToFire = 0;
+    public double fireRate;
 
     public boolean isShield() {
         return shield;
@@ -109,17 +139,54 @@ public class Tank implements Serializable, ActionListener {
         this.move = Move.Stop;
     }
 
+    public Tank(int x, int y, Move m) {
+        this.temp = (this instanceof Player) ? tank_Imgs[tank_level][0] : otank_Imgs[tank_level][0];
+        this.x = x;
+        this.y = y;
+        this.oldX = x;
+        this.oldY = y;
+        this.move = m;
+    }
+
+    public Tank(int x, int y, Move m, int level) {
+        this.temp = (this instanceof Player) ? tank_Imgs[tank_level][0] : otank_Imgs[tank_level][0];
+        this.x = x;
+        this.y = y;
+        this.oldX = x;
+        this.oldY = y;
+        this.move = m;
+        this.tank_level = level;
+    }
+
     public Tank() {
     }
 
     public void drawTank(Graphics g) {
+        switch (move) {
+            case D:
+                temp = (this instanceof Player) ? tank_Imgs[tank_level][2] : otank_Imgs[tank_level][2];
+                break;
+            case L:
+                temp = (this instanceof Player) ? tank_Imgs[tank_level][3] : otank_Imgs[tank_level][3];
+                break;
+            case U:
+                temp = (this instanceof Player) ? tank_Imgs[tank_level][0] : otank_Imgs[tank_level][0];
+                break;
+            case R:
+                temp = (this instanceof Player) ? tank_Imgs[tank_level][1] : otank_Imgs[tank_level][1];
+                break;
+        }
+        
+        
         if (live && !shield) {
             g.drawImage(temp, x, y, tank_width, tank_height, null);
         } else if (live && shield) {
             g.drawImage(temp, x, y, tank_width, tank_height, null);
-            g.drawImage(shieldImg, x-5, y-5, tank_width +10, tank_height+10, null);
-        } else {
+            g.drawImage(shieldImg, x - 5, y - 5, tank_width + 10, tank_height + 10, null);
+        } else if (this instanceof Player) {
             utils.utils.map.tanks.remove(this);
+        } else {
+            utils.utils.map.enemyTanks.remove(this);
         }
     }
 
@@ -141,7 +208,7 @@ public class Tank implements Serializable, ActionListener {
     }
 
     //bat va cham voi object
-    public boolean collideWithTanks(Queue<Tank> tanks) {
+    public boolean collideWithTanks(Queue<Player> tanks) {
         for (Tank tank : tanks) {
             if (this != tank) {
                 if (this.live && tank.isLive()
@@ -177,6 +244,10 @@ public class Tank implements Serializable, ActionListener {
             return true;
         }
         return false;
+    }
+
+    public boolean collideWithItem(Item item) {
+        return this.live && this.getRect().intersects(item.getRect()) && this instanceof Player;
     }
 
     public boolean collideWithWall(StoneWall w) {
@@ -215,6 +286,20 @@ public class Tank implements Serializable, ActionListener {
         if (this.live && this.getRect().intersects(b.getRect())) {
             this.changToOldDir();
             return true;
+        }
+        return false;
+    }
+
+    public boolean collideWithEnemys(Queue<Enemy> enemys) {
+        for (Enemy enemy : enemys) {
+            if (this != enemy && this instanceof Player) {
+                if (this.live && enemy.isLive()
+                        && this.getRect().intersects(enemy.getRect())) {
+                    this.changToOldDir();
+                    enemy.changToOldDir();
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -268,65 +353,71 @@ public class Tank implements Serializable, ActionListener {
 
     //fire bullets
     public Bullet fire() {
-        if (!live) {
+        switch (tank_level) {
+            case 0:
+                fireRate = 1.75;
+                break;
+            case 1:
+                fireRate = 1.25;
+                break;
+            case 2:
+                fireRate = 0.75;
+                break;
+            case 3:
+                fireRate = 0.5;
+                break;
+        }
+        Bullet genBullet = null;
+        if (live && shootable) {
+            genBullet = genBullet();
+            shootable = false;
+            timerFire = new Timer(250, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timeToFire += 0.25;
+                    if (timeToFire >= fireRate) {
+                        timeToFire = 0;
+                        shootable = true;
+                        timerFire.stop();
+                    }
+                }
+            });
+            timerFire.start();
+        }
+
+        return genBullet;
+    }
+
+    public Bullet genBullet() {
+        if (move == Move.Stop) {
             return null;
-        } else {
-            if (move == Move.Stop) {
-                return null;
-            }
-            int x = 0;
-            int y = 0;
-            switch (move) {
-                case D:
-                    x = this.x + tank_width / 2 - Bullet.width / 2;
-                    y = this.y + tank_height / 2 - Bullet.height / 2 + 20;
-                    break;
-                case R:
-                    x = this.x + tank_width / 2 - Bullet.width / 2 + 20;
-                    y = this.y + tank_height / 2 - Bullet.height / 2;
-                    break;
-                case L:
-
-                    x = this.x + tank_width / 2 - Bullet.width / 2 - 20;
-                    y = this.y + tank_height / 2 - Bullet.height / 2;
-                    break;
-                case U:
-                    x = this.x + tank_width / 2 - Bullet.width / 2;
-                    y = this.y + tank_height / 2 - Bullet.height / 2 - 30;
-                    break;
-            }
-
-            Bullet bullet = new Bullet(x, y, move, tank_level, (this instanceof Player) ? 0 : 1);
-
-            utils.utils.map.bullets.add(bullet);
-            return bullet;
         }
+        int bulletx = 0;
+        int bullety = 0;
+        switch (move) {
+            case D:
+                bulletx = this.x + tank_width / 2 - Bullet.width / 2;
+                bullety = this.y + tank_height / 2 - Bullet.height / 2 + 30;
+                break;
+            case R:
+                bulletx = this.x + tank_width / 2 - Bullet.width / 2 + 30;
+                bullety = this.y + tank_height / 2 - Bullet.height / 2;
+                break;
+            case L:
+                bulletx = this.x + tank_width / 2 - Bullet.width / 2 - 30;
+                bullety = this.y + tank_height / 2 - Bullet.height / 2;
+                break;
+            case U:
+                bulletx = this.x + tank_width / 2 - Bullet.width / 2;
+                bullety = this.y + tank_height / 2 - Bullet.height / 2 - 30;
+                break;
+        }
+        if(this instanceof Player){
+            audio.gun();
+        }
+        Bullet b = new Bullet(bulletx, bullety, move, tank_level, (this instanceof Player) ? 0 : 1);
+        utils.utils.map.bullets.add(b);
+        return b;
     }
 
-    public void genPlayer() {
-        utils.utils.map.tanks.remove(this);
-        x= utils.utils.x2;
-        y= utils.utils.y2;
-        oldX= utils.utils.x2;
-        oldY= utils.utils.y2;
-        
-        timer = new Timer(1000, this);
-        timer.start();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        time++;
-        if(time == 2)
-        {
-            utils.utils.map.tanks.add(this);
-            shield = true;
-        }
-        if(time>= 5)
-        {
-            time =0;
-            shield = false;
-            timer.stop();
-        }
-    }
 }

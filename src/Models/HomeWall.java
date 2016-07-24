@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,13 +16,13 @@ import static utils.utils.tk;
  *
  * @author especsily
  */
-public class HomeWall {
+public class HomeWall implements Serializable {
 
     public int x, y;
     public int index; // <=== biến để vẽ đúng hình
     public int width, height;
 
-    Image[] homeWallImgs
+    transient Image[] homeWallImgs
             = {
                 tk.getImage(Resource.class.getResource("/Images/Maps/HomeWall.gif")),
                 tk.getImage(Resource.class.getResource("/Images/Maps/HomeWall1.gif")),

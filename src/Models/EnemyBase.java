@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,15 +16,15 @@ import static utils.utils.tk;
  *
  * @author especsily
  */
-public class EnemyBase {
+public class EnemyBase implements Serializable{
 
-    private int width = 80;
-    private int height = 80;
+    public int width = 80;
+    public int height = 80;
 
     public int x, y;
     public int life = 3; // <==== số phát bắn để diệt
 
-    private boolean live = true;
+    public boolean live = true;
 
     public boolean isLive() {
         return live;
@@ -33,11 +34,11 @@ public class EnemyBase {
         this.live = live;
     }
 
-    Image[] obaseImg
+    transient Image[] obaseImg
             = {
-                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen3.png")),
-                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen2.png")),
-                tk.getImage(Resource.class.getResource("/Images/Maps/enemygen1.png"))
+                tk.getImage(Resource.class.getResource("/Images/Maps/EnemyGen3.png")),
+                tk.getImage(Resource.class.getResource("/Images/Maps/EnemyGen2.png")),
+                tk.getImage(Resource.class.getResource("/Images/Maps/EnemyGen1.png"))
             };
 
     public EnemyBase(int x, int y) {

@@ -9,8 +9,10 @@ import java.awt.Graphics;
 import java.io.Serializable;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.util.Random;
 import javax.annotation.Resource;
+import static utils.utils.tk;
+import static utils.utils.audio;
 
 /**
  *
@@ -20,17 +22,25 @@ public class Bullet implements Serializable {
 
     // move bullet
     public int x, y;
-    public int moveSpeed = 12;
-    private Tank.Move move; //hướng của đạn
-    private int tank_level;
+    public int moveSpeed = 8;
+    public Tank.Move move; //hướng của đạn
+    public int tank_level;
 
     // images
-    private int checkPlayer = 0; // <======== biến check đạn của player là 0 hoặc của enemy là 1 (để vẽ)
+    public int checkPlayer = 0; // <======== biến check đạn của player là 0 hoặc của enemy là 1 (để vẽ)
+
+    public int getCheckPlayer() {
+        return checkPlayer;
+    }
+
+    public void setCheckPlayer(int checkPlayer) {
+        this.checkPlayer = checkPlayer;
+    }
+
     public static int width = 15;
     public static int height = 25;
 
-    private static Toolkit tk = Toolkit.getDefaultToolkit();
-    Image[][] bullet_Imgs
+    transient Image[][] bullet_Imgs
             = {
                 {
                     tk.getImage(Resource.class.getResource("/Images/Bullet/bulletU.gif")),
@@ -46,7 +56,9 @@ public class Bullet implements Serializable {
                 }
             };
 
-    Image imgTemp = bullet_Imgs[checkPlayer][0];
+    transient Image imgTemp = bullet_Imgs[checkPlayer][0];
+
+    Random random = new Random();
 
     public int getX() {
         return x;
@@ -114,38 +126,69 @@ public class Bullet implements Serializable {
                 break;
         }
 
-        if (x < 0 || y < 0 || x > 760 || y > 560) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            utils.utils.map.bullets.remove(this);
+        if (x < 0 || y < 0 || x > 780 || y > 580) {
+            explosion(x, y);
         }
     }
 
-    //bat va cham voi object
+    public void explosion(int x, int y) {
+        utils.utils.map.explosions.add(new Explosion(x, y));
+        utils.utils.map.bullets.remove(this);
+    }
+
+    //bat va cham voi object 
     public boolean hitTank(Tank t) {
 
         if (this.getRect().intersects(t.getRect()) && t.isLive()) {
-            if (!t.isShield()) {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bigExplosions.add(new BigExplosion(t.getX(), t.getY()));
-                if (t.isLive() && t.lifeAmount > 0) {
-                    t.lifeAmount--;
-                    if (t.lifeAmount > 0) {
-                        t.genPlayer();
+            if (checkPlayer != 1 || !(t instanceof Enemy)) {
+                if (!t.isShield()) {
+                    utils.utils.tankDestroy++;
+                    if (utils.utils.tankDestroy % 3 == 0) {
+                        int tempx = random.nextInt(19) * 40;
+                        int tempy = random.nextInt(14) * 40;
+                        audio.collectItems();
+                        utils.utils.map.items.add(new Item(tempx, tempy, random.nextInt(5)));
+                        utils.utils.map.effects.add(new Effect(tempx, tempy));
+                    }
+                    if (t instanceof Player) {
+                        audio.playerDeath();
                     } else {
-                        t.setLive(false);
+                        audio.enemyDeath();
+                    }
+
+                    utils.utils.map.bigExplosions.add(new BigExplosion(t.getX(), t.getY()));
+                    if (t.lifeAmount > 0) {
+                        t.lifeAmount--;
+                        if (t.lifeAmount > 0 && t instanceof Player) {
+                            ((Player) t).genPlayer();
+                        } else {
+                            t.setLive(false);
+                        }
                     }
                 }
+                explosion(x, y);
+                return true;
             }
-            utils.utils.map.bullets.remove(this);
-            return true;
+        }
+        utils.utils.map.checkWin();
+        return false;
+    }
+
+    public boolean hitBullet(Bullet w) {
+        if (this.getRect().intersects(w.getRect())) {
+            if (checkPlayer != 1 || w.checkPlayer != 1) {
+                explosion(x, y);
+                utils.utils.map.bullets.remove(w);
+                return true;
+            }
         }
         return false;
     }
 
     public boolean hitWall(HomeWall w) {
         if (this.getRect().intersects(w.getRect())) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            utils.utils.map.bullets.remove(this);
+            audio.collideHomeWall();
+            explosion(x, y);
             utils.utils.map.homeWalls.remove(w);
             return true;
         }
@@ -155,13 +198,12 @@ public class Bullet implements Serializable {
     public boolean hitWall(RockWall w) {
         if (this.getRect().intersects(w.getRect())) {
             if (tank_level > 0) {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
+                audio.collideHomeWall();
                 utils.utils.map.rockWalls.remove(w);
             } else {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
+                audio.collideRockWall();
             }
+            explosion(x, y);
             return true;
         }
         return false;
@@ -170,13 +212,12 @@ public class Bullet implements Serializable {
     public boolean hitWall(StoneWall w) {
         if (this.getRect().intersects(w.getRect())) {
             if (tank_level > 1) {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
+                audio.collideHomeWall();
                 utils.utils.map.stoneWalls.remove(w);
             } else {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
+                audio.collideRockWall();
             }
+            explosion(x, y);
             return true;
         }
         return false;
@@ -184,14 +225,8 @@ public class Bullet implements Serializable {
 
     public boolean hitDecor(Decor d) {
         if (this.getRect().intersects(d.getRect())) {
-            if (tank_level > 1) {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
-                utils.utils.map.decors.remove(d);
-            } else {
-                utils.utils.map.explosions.add(new Explosion(x, y));
-                utils.utils.map.bullets.remove(this);
-            }
+            audio.collideRockWall();
+            explosion(x, y);
             return true;
         }
         return false;
@@ -199,9 +234,9 @@ public class Bullet implements Serializable {
 
     public boolean hitHome() {
         if (this.getRect().intersects(utils.utils.map.home.getRect())) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            utils.utils.map.bullets.remove(this);
+            explosion(x, y);
             utils.utils.map.home.setLive(false);
+            utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
             return true;
         }
         return false;
@@ -209,13 +244,18 @@ public class Bullet implements Serializable {
 
     public boolean hitEnemyBase(EnemyBase b) {
         if (this.getRect().intersects(b.getRect()) && b.isLive()) {
-            utils.utils.map.explosions.add(new Explosion(x, y));
-            utils.utils.map.bullets.remove(this);
-            b.life--;
-            if (b.life <= 0) {
-                utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
-                b.setLive(false);
-                utils.utils.map.obases.remove(b);
+            if (checkPlayer == 0) {
+                b.life--;
+                explosion(x, y);
+                if (b.life <= 0) {
+                    audio.enemyBaseDestroy();
+                    utils.utils.map.bigExplosions.add(new BigExplosion(x, y));
+                    b.setLive(false);
+                    utils.utils.map.obases.remove(b);
+                }
+                audio.collideEnemyBase();
+            } else {
+                explosion(x, y);
             }
             return true;
         }

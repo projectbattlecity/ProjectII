@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,13 +16,13 @@ import static utils.utils.tk;
  *
  * @author especsily
  */
-public class StoneWall {
+public class StoneWall implements Serializable{
 
-    private int width = 40;
-    private int height = 40;
+    public  int width = 40;
+    public  int height = 40;
 
-    int x, y;
-    Image stoneWallImg = tk.getImage(Resource.class.getResource("/Images/Maps/StoneWall.png"));
+    public int x, y;
+    transient Image stoneWallImg = tk.getImage(Resource.class.getResource("/Images/Maps/StoneWall.png"));
 
     public StoneWall(int x, int y) {
         this.x = x;

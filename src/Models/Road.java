@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,14 +16,14 @@ import static utils.utils.tk;
  *
  * @author ASUS
  */
-public class Road {
+public class Road implements Serializable{
 
-    private int width = 40;
-    private int height = 40;
+    public  int width = 40;
+    public  int height = 40;
 
-    private int x, y;
+    public  int x, y;
 
-    Image roadImg = tk.getImage(Resource.class.getResource("/Images/Maps/Road.png"));
+    transient Image roadImg = tk.getImage(Resource.class.getResource("/Images/Maps/Road.png"));
 
     public Road(int x, int y) {
         this.x = x;

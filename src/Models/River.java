@@ -8,6 +8,7 @@ package Models;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import static utils.utils.tk;
 
@@ -15,13 +16,13 @@ import static utils.utils.tk;
  *
  * @author c1409l0937
  */
-public class River {
-    private int width = 40; 
-    private int height = 40;
+public class River implements Serializable{
+    public int width = 40; 
+    public int height = 40;
     
-    private int x,y;
+    public int x,y;
     
-    Image riverImg = tk.getImage(Resource.class.getResource("/Images/Maps/river.gif"));
+    transient Image riverImg = tk.getImage(Resource.class.getResource("/Images/Maps/river.gif"));
 
     public River(int x, int y) {
         this.x = x;

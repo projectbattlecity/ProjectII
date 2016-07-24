@@ -5,7 +5,6 @@
  */
 package Models;
 
-import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -16,6 +15,7 @@ public class Enemy extends Tank {
 
     private Random r = new Random();
     private int step = 0;
+    private int find = 0;
 
     public Enemy(int x, int y) {
         super(x, y);
@@ -23,8 +23,15 @@ public class Enemy extends Tank {
 
     public Enemy(int x, int y, int tank_level) {
         super(x, y);
+        this.lifeAmount = 1;
         this.tank_level = tank_level;
         this.move = Tank.Move.D;
+    }
+
+    public Enemy(int x, int y, int tank_level, Move m) {
+        super(x, y, m);
+        this.lifeAmount = 1;
+        this.tank_level = tank_level;
     }
 
     public Enemy() {
@@ -32,18 +39,29 @@ public class Enemy extends Tank {
 
     public Move move() {
         Tank.Move[] moves = Tank.Move.values();
-//        
 
-        if (!isMove()) {
+        if (find != 0) {
+            find--;
+            findHome(moves);
+            return move;
+        } else if (!isMove()) {
             dicideDerection(moves);
         } else {
             step++;
-            if (step >= 50) {
+            if (step >= 150) {
                 dicideDerection(moves);
-                this.fire();
                 step = 0;
             }
         }
+
+        if (r.nextInt(100) > 98) {
+            this.fire();
+        }
+
+        if (r.nextInt(1000) > 998) {
+            find = 50;
+        }
+
         return move;
     }
 
@@ -54,7 +72,6 @@ public class Enemy extends Tank {
             move = moves[r.nextInt(2)];
         }
     }
-
 
     @Override
     public void tankMove(Move m) {
@@ -103,24 +120,9 @@ public class Enemy extends Tank {
         }
     }
 
-    private void changToOldDir() {
+    public void changToOldDir() {
         this.x = oldX;
         this.y = oldY;
-    }
-
-    //bat va cham voi object
-    public boolean collideWithEnemys(Queue<Enemy> enemys) {
-        for (Enemy enemy : enemys) {
-            if (this != enemy) {
-                if (this.live && enemy.isLive()
-                        && this.getRect().intersects(enemy.getRect())) {
-                    this.changToOldDir();
-                    enemy.changToOldDir();
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public boolean isMove() {
@@ -134,5 +136,28 @@ public class Enemy extends Tank {
             result = true;
         }
         return result;
+    }
+    private void findHome(Move[] moves) {
+        if (!isMove()) {
+            if (x < 9 * 40) {
+                if (this.move == Tank.Move.D) {
+                    move = Tank.Move.R;
+                } else if (this.move == Tank.Move.L) {
+                    move = Tank.Move.R;
+                } else if (this.move == Tank.Move.U) {
+                    move = Tank.Move.D;
+                } else {
+                    move = Tank.Move.D;
+                }
+            } else if (x > 10 * 40) {
+                if (this.move == Tank.Move.L || this.move == Tank.Move.U) {
+                    move = Tank.Move.D;
+                } else {
+                    move = Tank.Move.L;
+                }
+            }
+        } else if (x >= 9 * 40 && x <= 10 * 40) {
+            move = Tank.Move.D;
+        }
     }
 }
